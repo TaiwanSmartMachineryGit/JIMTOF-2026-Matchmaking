@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>TAITRA Smart Match — JIMTOF 2026</title>
+<style>
+:root{
+  --bg:#effafa; --panel:rgba(255,255,255,.94); --panel2:rgba(239,250,250,.96);
+  --text:#164d4c; --muted:#5f7f7e; --line:#b9e2e0;
+  --good:#00ada9; --warn:#e6b85c; --accent:#00ada9; --accent-dark:#007f7c;
+  --danger:#c87079;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#f7fdfd 0%,#e0f6f5 45%,#b9e9e7 100%);color:var(--text);
+font-family:system-ui,-apple-system,"Segoe UI","Noto Sans TC",Arial,sans-serif}
+header{position:sticky;top:0;z-index:3;background:rgba(247,253,253,.92);backdrop-filter:blur(10px);
+border-bottom:1px solid var(--line);padding:16px 20px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1180px;margin:auto}\n.brand-left{display:flex;align-items:center;gap:16px}
+.brand-mark{font-size:22px;font-weight:900;letter-spacing:.5px;color:var(--accent-dark);line-height:.95}
+.brand-mark span{display:block;font-size:9px;letter-spacing:1.4px;margin-top:5px;color:var(--accent)}
+.event-heading h1{font-size:27px;line-height:1.12;margin:0 0 6px;font-weight:900;color:var(--text)}
+.event-meta{font-size:14px;line-height:1.35;color:var(--muted);font-weight:600}
+
+.selector-step{border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.58);margin-top:12px;overflow:hidden}
+.selector-head{width:100%;display:flex;align-items:center;gap:10px;text-align:left;background:transparent;color:var(--text);padding:13px 14px;border-radius:0}
+.selector-head:hover{background:#eefafa}
+.step-num{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#dff5f4;color:var(--accent-dark);font-size:12px;font-weight:900;flex:0 0 auto}
+.step-copy{min-width:0;flex:1;display:block}.step-title{display:block;font-size:14px;font-weight:800;line-height:1.3}.step-summary{display:block;font-size:11px;color:var(--muted);margin-top:5px;line-height:1.45;white-space:normal;overflow:visible;text-overflow:clip}
+.step-chevron{color:var(--accent-dark);font-size:13px;transition:.18s transform}
+.selector-step.open .step-chevron{transform:rotate(180deg)}
+.selector-body{display:none;padding:0 14px 14px}.selector-step.open .selector-body{display:block}
+.cap-group{margin-top:12px}.cap-group:first-child{margin-top:4px}
+.cap-group-title{font-size:11px;font-weight:900;letter-spacing:.55px;text-transform:uppercase;color:var(--accent-dark);margin-bottom:7px}
+.selected-count{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--accent);color:#fff;font-size:11px;font-weight:800;margin-left:5px}
+@media(max-width:620px){.brand-left{gap:10px;align-items:flex-start;flex-direction:column}.brand-mark{font-size:19px}}
+.brand h1{font-size:20px;margin:0}.brand small{color:var(--muted)}
+.wrap{max-width:1180px;margin:auto;padding:24px 18px 60px}
+.grid{display:flex;flex-direction:column;gap:22px}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+border-radius:18px;padding:18px;box-shadow:0 16px 38px rgba(0,127,124,.13)}
+aside.card{position:static;max-height:none;overflow:visible}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+input,select{width:100%;background:rgba(255,255,255,.82);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+.tags{display:flex;flex-wrap:wrap;gap:8px}.tag{border:1px solid var(--line);background:rgba(255,255,255,.72);color:#187572;
+border-radius:999px;padding:7px 10px;font-size:12px;cursor:pointer;user-select:none}
+.tag.active{background:#c9f0ee;border-color:#58c6c2;color:#006f6c;box-shadow:0 0 0 1px rgba(95,174,203,.08) inset}
+button{border:0;border-radius:12px;padding:11px 14px;font-weight:700;cursor:pointer}
+.primary{background:var(--accent);color:white}.ghost{background:#e8f8f7;color:var(--text);border:1px solid var(--line)}
+.good{background:var(--good);color:white}.website{display:block;text-decoration:none;background:#ddf5f4;color:#087a77;border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-weight:700}.danger{background:#f7e7e9;color:#a34f59;border:1px solid #e7bdc2}
+.matches{display:grid;gap:14px}.match{display:grid;grid-template-columns:86px minmax(0,1fr) 128px;gap:14px;align-items:center;
+padding:16px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.62)}
+.score{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font-size:20px;font-weight:800;
+background:conic-gradient(var(--good) calc(var(--score)*1%),#d5eaf1 0);position:relative}
+.score:after{content:"";position:absolute;inset:7px;border-radius:50%;background:#fbfefe}
+.score span{position:relative;z-index:1}.match h3{margin:0 0 4px;font-size:17px}.meta{color:var(--muted);font-size:13px}
+.why{margin-top:8px;color:#356c6a;font-size:13px;line-height:1.5}.actions{display:flex;flex-direction:column;gap:8px;align-items:stretch;justify-content:center;min-width:128px}.actions button,.actions a{width:100%;text-align:center}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:14px}
+.section-title h2{margin:0;font-size:20px}.pill{font-size:12px;color:#477b79;border:1px solid var(--line);background:rgba(255,255,255,.45);padding:6px 10px;border-radius:999px}
+.hero{margin-bottom:20px}.hero h2{font-size:30px;margin:0 0 6px}.hero p{margin:0;color:var(--muted)}
+.note{margin-top:14px;color:var(--muted);font-size:12px;line-height:1.5}
+.small-note{margin-top:8px;color:var(--muted);font-size:11px;line-height:1.45}
+.match-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.match-tag{font-size:11px;padding:4px 7px;border-radius:999px;background:#e0f6f5;border:1px solid #b9e2e0;color:#147b78}
+.empty{padding:28px;border:1px dashed var(--line);border-radius:14px;text-align:center;color:var(--muted);background:rgba(255,255,255,.45)}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,80,78,.28);z-index:10;align-items:center;justify-content:center;padding:18px}
+.modal .box{max-width:520px;width:100%;background:#fbfefe;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 20px 60px rgba(0,127,124,.18)}
+.dategrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 4px}.timegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0 14px}
+.time{background:#e6f7f6;color:var(--text);border:1px solid var(--line)}.time.selected{background:var(--accent);color:white;border-color:var(--accent)}.time:disabled{cursor:not-allowed;opacity:1;background:#eef1f4;color:#8a96a3;border-color:#d3d9df}.time.booked:disabled{background:#d9dee3;color:#6f7882;border-color:#c4cbd2;text-decoration:none;font-weight:700}
+@media(max-width:820px){
+  header{position:static}
+  .grid{grid-template-columns:1fr}
+  aside.card{position:static;max-height:none;overflow:visible}
+  .match{grid-template-columns:70px 1fr}
+  .actions{grid-column:1/-1;flex-direction:row;justify-content:flex-end;min-width:0}.actions button,.actions a{width:auto}
+  .score{width:64px;height:64px}
+}
+
+.shortlist-card{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 10px 24px rgba(32,67,86,.05)}
+.shortlist-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.shortlist-count{min-width:28px;height:28px;border-radius:8px;background:#dff5f4;color:#087b78;display:inline-flex;align-items:center;justify-content:center;font-weight:800}
+.shortlist-help{color:var(--muted);font-size:14px;margin:6px 0 12px}
+.shortlist-item{display:grid;grid-template-columns:1fr auto;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+.shortlist-item:first-of-type{border-top:none}
+.shortlist-name{font-weight:800;color:var(--text)}
+.shortlist-meta{font-size:13px;color:var(--muted);margin-top:4px}
+.shortlist-why{margin-top:9px;font-size:12px;line-height:1.55;color:var(--text)}
+.shortlist-why-title{font-weight:800;color:var(--accent-dark);margin-bottom:2px}
+.shortlist-why-row{margin-top:2px}.shortlist-why-row b{color:var(--muted)}
+.shortlist-status{display:inline-block;margin-top:7px;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;background:#eef5f8;color:#315d72}
+.shortlist-status.interested{background:#d8f4f2;color:#087b78}
+.shortlist-remove{border:0;background:transparent;color:#71808c;font-size:22px;line-height:1;cursor:pointer;padding:0 4px}
+.shortlist-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.shortlist-actions button{flex:1;min-width:170px}
+.shortlist-empty{padding:16px 0;color:var(--muted);font-size:14px}
+@media print{
+  body *{visibility:hidden!important}
+  #shortlistPrintArea,#shortlistPrintArea *{visibility:visible!important}
+  #shortlistPrintArea{position:absolute;left:0;top:0;width:100%;padding:24px;background:#fff}
+  .shortlist-remove,.shortlist-actions,.shortlist-help{display:none!important}
+  .shortlist-card{box-shadow:none;border:none;margin:0;padding:0}
+}
+
+
+.top-form{padding:22px}
+.buyer-fields{display:grid;grid-template-columns:1.25fr 1fr 1.5fr;gap:16px;align-items:start}
+.buyer-fields label{margin-top:0}
+/* Keep partnership choices on a single horizontal row on desktop. */
+.buyer-fields .partnership-field{grid-column:1/-1}
+.partnership-field{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.partnership-field>label{margin:0;white-space:nowrap}
+.partnership-field .tags{display:flex;flex-wrap:wrap;gap:8px}
+.match-criteria{margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+.criteria-grid{display:flex;flex-direction:column;gap:18px}
+.criteria-grid .selector-step{margin-top:0}
+.find-action{display:flex;justify-content:flex-end;margin-top:16px}
+.find-action .primary{min-width:220px}
+.results-card{width:100%}
+@media(max-width:900px){
+  .buyer-fields{grid-template-columns:1fr 1fr}
+  .buyer-fields .partnership-field{grid-column:1/-1}
+  .criteria-grid{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+  .buyer-fields{grid-template-columns:1fr}
+  .buyer-fields .partnership-field{grid-column:1/-1}
+  .find-action .primary{width:100%;min-width:0}
+}
+
+
+.criteria-grid .selector-step{
+  margin:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  overflow:visible;
+  padding:0 0 18px;
+  border-bottom:1px solid var(--line);
+}
+.criteria-grid .selector-step:last-child{border-bottom:0;padding-bottom:0}
+.criteria-grid .selector-head{
+  padding:0 0 12px;
+  cursor:default;
+  pointer-events:none;
+}
+.criteria-grid .selector-head:hover{background:transparent}
+.criteria-grid .selector-body{display:block!important;padding:0}
+.criteria-grid .step-chevron{display:none}
+.criteria-grid .step-num{
+  width:28px;height:28px;background:var(--accent);color:#fff;font-size:13px
+}
+.criteria-grid .step-title{font-size:16px}
+.criteria-grid .step-summary{display:none!important}
+.criteria-grid .tags{gap:8px}
+.criteria-grid .tag{padding:8px 11px}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-left">
+      <div class="brand-mark">TAIWAN <span>SMART MANUFACTURING</span></div>
+      <div class="event-heading"><h1>Taiwan Supplier Matchmaking</h1><div class="event-meta">JIMTOF 2026 · Tokyo Big Sight · Oct. 26–31</div></div>
+    </div>
+    <div class="pill"><span id="supplierCount">92</span> Taiwan suppliers</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <h2><strong>Find the Right Taiwan Supplier</strong></h2>
+    <p>Tell us what you need and discover Taiwan suppliers that match your industry, solution needs, and technical requirements.</p>
+  </div>
+
+  <div class="grid">
+    <aside class="card top-form">
+      <h3 style="margin:0 0 14px">Buyer Information</h3>
+      <div class="buyer-fields">
+        <div><label>Contact Person <span style="color:#b42318">*</span></label><input id="contactPerson" placeholder="Full name" autocomplete="name" required /></div>
+        <div><label>Company Email <span style="color:#b42318">*</span></label><input id="companyEmail" type="email" placeholder="name@company.com" autocomplete="email" required /></div>
+        <div>
+          <label>Company <span style="color:#b42318">*</span></label>
+          <input id="company" placeholder="Company name" required aria-required="true"/>
+          <div id="companyError" style="display:none;margin-top:6px;color:#b42318;font-size:12px;font-weight:600">Company name is required.</div>
+        </div>
+        <div>
+          <label>Buyer Type</label>
+          <select id="buyerType">
+            <option value="">Select buyer type</option>
+            <option>Distributor / Dealer</option>
+            <option>System Integrator</option>
+            <option>End User</option>
+            <option>OEM / Machine Builder</option>
+          </select>
+        </div>
+        <div class="partnership-field">
+          <label>Partnership Goal</label>
+          <div class="tags" id="goals">
+            <span class="tag">Distribution</span>
+            <span class="tag">OEM Sourcing</span>
+            <span class="tag">Turnkey Integration</span>
+            <span class="tag">Technology Partnership</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="match-criteria">
+        <h3 style="margin:0 0 14px">Find the Right Match</h3>
+        <div class="criteria-grid">
+
+      <div class="selector-step open" id="stepIndustries">
+        <div class="selector-head">
+          <span class="step-num">1</span>
+          <span class="step-copy"><span class="step-title">What is your application industry?</span><span class="step-summary" id="industriesSummary"></span></span>
+          <span class="step-chevron">⌄</span>
+        </div>
+        <div class="selector-body">
+          <div class="tags" id="industries">
+            <span class="tag">Aerospace</span>
+            <span class="tag">Semiconductor</span>
+            <span class="tag">Automotive &amp; Mobility</span>
+            <span class="tag">Medical / Dental</span>
+            <span class="tag">Electronics &amp; Digital Equipment</span>
+            <span class="tag">Mold &amp; Die</span>
+            <span class="tag">Energy &amp; Power</span>
+            <span class="tag">Robotics</span>
+            <span class="tag">Construction &amp; Heavy Equipment</span>
+            <span class="tag">Marine &amp; Shipbuilding</span>
+            <span class="tag">Oil &amp; Gas / Petrochemical</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="selector-step open" id="stepSolutions">
+        <div class="selector-head">
+          <span class="step-num">2</span>
+          <span class="step-copy"><span class="step-title">What solutions are you looking for?</span><span class="step-summary" id="solutionsSummary"></span></span>
+          <span class="step-chevron">⌄</span>
+        </div>
+        <div class="selector-body">
+          <div class="tags" id="solutions">
+            <span class="tag">Intelligent Machining</span>
+            <span class="tag">Robotics &amp; Automation Integration</span>
+            <span class="tag">Smart Monitoring &amp; Industrial IoT</span>
+            <span class="tag">Predictive Maintenance &amp; Equipment Diagnostics</span>
+            <span class="tag">Intelligent Quality Inspection</span>
+            <span class="tag">Smart Energy Management</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="selector-step open" id="stepNeeds">
+        <div class="selector-head">
+          <span class="step-num">3</span>
+          <span class="step-copy"><span class="step-title">What product categories are you looking for?</span><span class="step-summary" id="needsSummary"></span></span>
+          <span class="step-chevron">⌄</span>
+        </div>
+        <div class="selector-body">
+          <div id="needs">
+<div class="cap-group"><div class="cap-group-title">Machine Tools</div><div class="tags"><span class="tag">5-Axis Machining</span><span class="tag">Milling</span><span class="tag">Turning</span><span class="tag">Grinding</span><span class="tag">EDM</span><span class="tag">Drilling</span><span class="tag">Sawing</span><span class="tag">Broaching</span><span class="tag">Laser Processing</span><span class="tag">Metal Forming &amp; Presses</span></div></div>
+<div class="cap-group"><div class="cap-group-title">Tools &amp; Workholding</div><div class="tags"><span class="tag">Cutting Tools</span><span class="tag">Tool Holders &amp; Toolholding</span><span class="tag">Workholding &amp; Fixtures</span><span class="tag">ATC &amp; Tool Changing</span></div></div>
+<div class="cap-group"><div class="cap-group-title">Machine Components &amp; Motion</div><div class="tags"><span class="tag">Spindles</span><span class="tag">Rotary Tables &amp; Indexing</span><span class="tag">Linear Motion</span><span class="tag">Gears &amp; Gear Drives</span><span class="tag">Hydraulics &amp; Pneumatics</span><span class="tag">Machine Protection &amp; Covers</span><span class="tag">Machine Structures &amp; Castings</span></div></div>
+<div class="cap-group"><div class="cap-group-title">Automation &amp; Smart Manufacturing</div><div class="tags"><span class="tag">Automation Systems</span><span class="tag">Robotics</span><span class="tag">CNC Controls</span><span class="tag">Smart Manufacturing &amp; IoT</span><span class="tag">Machine Monitoring</span><span class="tag">Measurement &amp; Inspection</span><span class="tag">Electrical &amp; Connectivity</span></div></div>
+<div class="cap-group"><div class="cap-group-title">Other Manufacturing Technologies</div><div class="tags"><span class="tag">Abrasives &amp; Finishing</span><span class="tag">Tube &amp; Wire Processing</span><span class="tag">Welding &amp; Joining</span><span class="tag">Lubrication, Cooling &amp; Fluid Systems</span><span class="tag">Filtration &amp; Purification Systems</span><span class="tag">Industrial Materials</span></div></div>
+          </div>
+        </div>
+      </div>
+
+        </div>
+        <div id="tagCounter" role="status" aria-live="polite" style="margin-top:12px;font-size:13px;font-weight:700;color:var(--accent-dark)">0 / 5 tags selected · Select at least 1</div>
+        <div class="find-action">
+          <button class="primary" onclick="rerank()">Find My Matches</button>
+        </div>
+      </div>
+      <div class="note">Select <b>at least 1 and at most 5 tags in total</b> across all three categories. Matching weights: Product Categories 50%, Smart Solutions 30%, Industries 20%. Unselected categories are excluded and remaining weights are normalized. Only the six highest-ranked matching suppliers are displayed. Ties are broken by Product score, then Smart Solutions score.</div>
+    </aside>
+
+    <main class="card results-card">
+      <div class="section-title">
+        <div><h2>Top Matches</h2><div class="meta" id="summary">Top 6 Taiwan suppliers</div></div>
+        <span class="pill">Product 50% · Solution 30% · Industry 20%</span>
+      </div>
+      <div class="matches" id="matches"></div>
+    
+<div class="shortlist-card" id="shortlistPrintArea">
+  <div class="shortlist-head">
+    <div>
+      <h2 style="margin:4px 0 0">Your Shortlist</h2>
+    </div>
+    <div class="shortlist-count" id="shortlistCount">0</div>
+  </div>
+  <div class="shortlist-help">Keep the suppliers you want to visit. Adding a supplier does not book a meeting.</div>
+  <div id="shortlistList" class="shortlist-empty">No suppliers saved yet.</div>
+  <div class="shortlist-actions">
+    <button class="secondary" type="button" onclick="clearShortlist()">Clear list</button>
+    <button class="secondary" type="button" onclick="downloadShortlistImage()">Download Image ↓</button>
+    <button class="primary" type="button" onclick="printShortlist()">Print / Save as PDF ↗</button>
+  </div>
+</div>
+
+</main>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 id="modalTitle" style="margin:0">Schedule Meeting</h3>
+      <button class="ghost" onclick="closeModal()">✕</button>
+    </div>
+    <p class="meta">Select a preferred meeting date and time during JIMTOF 2026.</p>
+
+    <label style="margin-top:14px">Date</label>
+    <div class="dategrid" id="dateGrid">
+      <button class="time date-option" onclick="selectMeetingDate('Oct 26', this)">Oct 26</button>
+      <button class="time date-option" onclick="selectMeetingDate('Oct 27', this)">Oct 27</button>
+      <button class="time date-option" onclick="selectMeetingDate('Oct 28', this)">Oct 28</button>
+      <button class="time date-option" onclick="selectMeetingDate('Oct 29', this)">Oct 29</button>
+      <button class="time date-option" onclick="selectMeetingDate('Oct 30', this)">Oct 30</button>
+      <button class="time date-option" onclick="selectMeetingDate('Oct 31', this)">Oct 31</button>
+    </div>
+
+    <label style="margin-top:14px">Time</label>
+    <div id="timePrompt" class="small-note" style="margin-bottom:8px">Select a date first.</div>
+    <div class="timegrid" id="timeGrid"></div>
+
+    <div id="confirmMsg" class="why"></div>
+  </div>
+</div>
+
+<script>
+// -----------------------------------------------------------------------------
+// Data source
+// -----------------------------------------------------------------------------
+// Leave blank for now. When the Google Apps Script endpoint is ready, paste it
+// here and return the same supplier field names used by the embedded data.
+const GOOGLE_SHEET_API_URL = ""; // JIMTOF backend: add the new Apps Script Web App URL here.
+
+const EMBEDDED_SUPPLIERS = [{"id":"S001","name":"ACCU-CUT Industrial Co, Ltd","nameZh":"銘九股份有限公司","booth":"W1022","building":"West Exhibition Hall","category":"Components","products":"Carbide end mills; thread mills; taps; carbide drills; reamers; form tools; dental cutting tools","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools"],"website":"https://www.accu-cut.com.tw/","active":true},{"id":"S002","name":"ASIA PACIFIC ELITE CORP.","nameZh":"亞太菁英股份有限公司","booth":"E1009-2","building":"East Exhibition Hall","category":"Machine Tools","products":"High Speed 5-axis Machining Center","industries":["Aerospace"],"solutions":["Smart Monitoring & Industrial IoT"],"capabilities":["5-Axis Machining","Milling"],"website":"https://www.apeccnc.com/en/","active":true},{"id":"S003","name":"AutoCam Technology Co.,LTD","nameZh":"歐權科技股份有限公司","booth":"W3038","building":"West Exhibition Hall","category":"Components","products":"CNC Rotary Table, Machine Tools Changer Unit, High Speed Indexing Unit","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Rotary Tables & Indexing","ATC & Tool Changing"],"website":"https://www.autocam.com.tw/en/index.html","active":true},{"id":"S004","name":"AUTOGRIP MACHINERY CO., LTD.","nameZh":"佳賀精機股份有限公司","booth":"W3001","building":"West Exhibition Hall","category":"Components","products":"Power chucks; hydraulic chucks; stationary chucks; rotary hydraulic cylinders; pneumatic rotary cylinders","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Workholding & Fixtures","Hydraulics & Pneumatics"],"website":"https://www.autogrip-machinery.com/","active":true},{"id":"S005","name":"Cam Power International Precision Machinery Co.,Ltd","nameZh":"康普國際精密機械股份有限公司","booth":"W3030","building":"West Exhibition Hall","category":"Components","products":"4-axis CNC rotary tables; 5-axis CNC rotary tables; energy-saving digital rotary tables","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Rotary Tables & Indexing"],"website":"https://www.cam-power.com/","active":true},{"id":"S006","name":"CHAIN HEADWAY CO., LTD.","nameZh":"正河源股份有限公司","booth":"W1056","building":"West Exhibition Hall","category":"Components","products":"Indexable milling cutters; drills; tool holders; boring tools; diamond brushes; tooling accessories","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools","Tool Holders & Toolholding","Abrasives & Finishing"],"website":"https://www.chainheadway.com/","active":true},{"id":"S007","name":"Chen Ying Oil Machine Co., Ltd.","nameZh":"彰化振榮油機股份有限公司","booth":"S1049","building":"South Exhibition Hall","category":"Components","products":"Centralized lubrication systems; electric lubricators; oil pumps; grease distributors; lubrication accessories","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Lubrication, Cooling & Fluid Systems"],"website":"https://www.chenying.com.tw/","active":true},{"id":"S008","name":"Cheng Feng Casting Factory Co., Ltd.","nameZh":"承鋒鑄造工業股份有限公司","booth":"W4010-14","building":"West Exhibition Hall","category":"Components","products":"Machine-tool castings; wind-turbine hubs and brake discs; industrial equipment castings; automotive die castings","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Machine Structures & Castings"],"website":"https://www.chengfeng.com.tw/en-US","active":true},{"id":"S009","name":"CHENG HUI MACHINERY TOOLS FACTORY","nameZh":"誠輝機械工具廠","booth":"W4010-11","building":"West Exhibition Hall","category":"Components","products":"All Kind of Reamers, Adjustable reamer, Carbide Reamer, HSS Reamer","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools"],"website":"https://www.yjmtools.com/en-US/","active":true},{"id":"S010","name":"CHIA LERN CO., LTD.","nameZh":"佳論興業有限公司","booth":"S1048","building":"South Exhibition Hall","category":"Machine Tools","products":"Profile grinders; CNC multi-purpose punch/profile grinders; carbide-bar cutting machines; chamfering machines; cutting machines","industries":["Mold & Die","Automotive & Mobility","Electronics & Digital Equipment"],"solutions":[],"capabilities":["Grinding","Abrasives & Finishing"],"website":"https://www.chialern.com/en/index.html","active":true},{"id":"S011","name":"CHIEN WEI PRECISE TECHNOLOGY CO., LTD.","nameZh":"建暐精密科技股份有限公司","booth":"E1009-1","building":"East Exhibition Hall","category":"Machine Tools","products":"Jig grinders; groove grinders; measuring equipment; molds; precision components","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die","Energy & Power"],"solutions":[],"capabilities":["Grinding","Measurement & Inspection"],"website":"https://www.chienwei.com/","active":true},{"id":"S012","name":"CHIEN YIH MACHINERY CO., LTD.","nameZh":"健溢機械股份有限公司","booth":"E1009-4","building":"East Exhibition Hall","category":"Machine Tools","products":"CENTER DRIVE LATHE","industries":["Automotive & Mobility","Aerospace","Energy & Power"],"solutions":[],"capabilities":["Turning"],"website":"https://fastcut.co/","active":true},{"id":"S013","name":"CHIN HUNG MACHINERY CO., LTD.","nameZh":"金竑精密股份有限公司","booth":"S1079","building":"South Exhibition Hall","category":"Machine Tools","products":"High-speed precision lathes; CNC lathes; slant-bed CNC lathes; flat-bed CNC lathes","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die","Energy & Power"],"solutions":[],"capabilities":["Turning"],"website":"https://www.kinwa-lathe.com","active":true},{"id":"S014","name":"CHU LUN SING CO., LTD.","nameZh":"巨輪興股份有限公司","booth":"W4010-15","building":"West Exhibition Hall","category":"Factory Solutions","products":"Hydraulic jack and machine","industries":["Construction & Heavy Equipment","Automotive & Mobility"],"solutions":[],"capabilities":["Hydraulics & Pneumatics"],"website":"https://www.sunrun.com.tw/?lang=en","active":true},{"id":"S015","name":"CHUNG PU LASER CO.,LTD","nameZh":"中部雷射股份有限公司","booth":"W2031","building":"West Exhibition Hall","category":"Machine Tools","products":"Industrial laser systems; laser processing equipment; laser marking/welding/cutting solutions","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Laser Processing","Welding & Joining","Automation Systems"],"website":"https://en.chungpu.com/","active":true},{"id":"S016","name":"CONSTANCE TECHNOLOGY CO., LTD","nameZh":"進揚科技股份有限公司","booth":"E7005","building":"East Exhibition Hall","category":"Automation","products":"Touchscreen testing equipment; laser-module accuracy adjustment machines; calibration systems; production automation equipment","industries":["Electronics & Digital Equipment","Semiconductor","Robotics"],"solutions":[],"capabilities":["Automation Systems","Measurement & Inspection"],"website":"https://www.constance.com.tw/?lang=en","active":true},{"id":"S017","name":"Cosen Mechatronics Co., Ltd","nameZh":"高聖精密機電股份有限公司","booth":"S2023","building":"South Exhibition Hall","category":"Machine Tools","products":"Horizontal/vertical band saws; CNC automatic bandsaws; beamline drilling systems; automated sawing lines","industries":["Construction & Heavy Equipment","Automotive & Mobility","Energy & Power"],"solutions":["Intelligent Machining","Smart Monitoring & Industrial IoT","Predictive Maintenance & Equipment Diagnostics"],"capabilities":["Sawing","Drilling","Automation Systems"],"website":"https://www.cosen.com/en/index.html","active":true},{"id":"S018","name":"Dahching Electric Industrial CO., Ltd","nameZh":"大慶電機工業股份有限公司","booth":"E1020","building":"East Exhibition Hall","category":"Machine Tools","products":"Spot Welding Machine, Projection Welding Machine, Seam Welding Machine, Butt / Flash Butt welding Machine, Advanced Joining & Thermal Systems","industries":["Automotive & Mobility","Electronics & Digital Equipment","Construction & Heavy Equipment"],"solutions":[],"capabilities":["Welding & Joining","Automation Systems"],"website":"https://www.dahching.com/","active":true},{"id":"S019","name":"DERSTRONG ENTERPRISE CO., LTD.","nameZh":"旺毅企業有限公司","booth":"W3024","building":"West Exhibition Hall","category":"Factory Solutions","products":"Safety Window for Machine tool, Decorative Panel, Gyroport, Destrong Anti-intrusion Glass, Smart Switchable Glass, Bullet Resistant Glass ODM Service","industries":["Automotive & Mobility","Mold & Die"],"solutions":[],"capabilities":["Machine Protection & Covers"],"website":"https://www.derstrong.com.tw/","active":true},{"id":"S020","name":"deta International","nameZh":"德大機械股份有限公司","booth":"W2061","building":"West Exhibition Hall","category":"Components","products":"Automatioc Tool Changer, Automatic Workpiece Changer","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["ATC & Tool Changing","Automation Systems"],"website":"https://www.deta.com.tw/","active":true},{"id":"S021","name":"detron Machine Co., Ltd.","nameZh":"德川機械股份有限公司","booth":"W2063","building":"West Exhibition Hall","category":"Components","products":"4-axis CNC rotary tables; 5-axis trunnion rotary tables; indexing tables; automatic pallet changer systems","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Rotary Tables & Indexing","Automation Systems"],"website":"https://www.detron-rotary.com/","active":true},{"id":"S022","name":"DHF PRECISION TOOL., LTD.","nameZh":"德信發企業股份有限公司","booth":"W1052","building":"West Exhibition Hall","category":"Components","products":"Carbide end mills; exchangeable-head end mills; ball-nose/corner-radius end mills; high-hardness milling tools","industries":["Aerospace","Automotive & Mobility","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools"],"website":"https://www.endmill.com.tw/index/en","active":true},{"id":"S023","name":"DI CHUN IRON WORK CO., LTD","nameZh":"億川鐵工所股份有限公司","booth":"W3027","building":"West Exhibition Hall","category":"Components","products":"Power Chuck, Rotary Hydraulic Cylinder, Collet Chuck, Pneumatic Power Chuck, Soft & Hard Jaws, Scroll Chuck / Jaw Chuck, Special Purpose Power Chucks","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Workholding & Fixtures","Hydraulics & Pneumatics"],"website":"https://www.auto-strong.com/en-US/","active":true},{"id":"S024","name":"DI KU DIAMOND ENTERPRISES CO., LTD","nameZh":"帝固鑽石企業有限公司","booth":"W4010-8","building":"West Exhibition Hall","category":"Components","products":"Monocrystalline Diamond Tool/Polycrystalline Diamond Tool/Tungsten Carbide Tool","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools","Abrasives & Finishing"],"website":"https://www.diku.com.tw/index.php?lang=3","active":true},{"id":"S025","name":"Echaintool Precision Co., Ltd.","nameZh":"益詮精密股份有限公司","booth":"W1019","building":"West Exhibition Hall","category":"Components","products":"Insert, Carbide End Mill, Tool Holder, Tool Holder With Coolant, Automatic Lathes, Hand Tools, Boring Bar, Grooving, End Mill and Cutter, Rapid Drill, Machine Accessories, Tiny Carbide Boring Bar, Carbide Drill","industries":["Aerospace","Automotive & Mobility","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools","Tool Holders & Toolholding"],"website":"https://www.echaintool.com/index.aspx?lang=US","active":true},{"id":"S026","name":"EVERISING MACHINE CO.,","nameZh":"合濟工業股份有限公司","booth":"S2010","building":"South Exhibition Hall","category":"Machine Tools","products":"Band Saw Machine, Circular Saw Cutting Machine","industries":["Automotive & Mobility","Construction & Heavy Equipment","Energy & Power"],"solutions":[],"capabilities":["Sawing","Automation Systems"],"website":"https://www.everising.com/","active":true},{"id":"S027","name":"GEMTOOL Co., LTD.","nameZh":"聖釭有限公司","booth":"W4008","building":"West Exhibition Hall","category":"Components","products":"Diamond Tools, End Mills, Drills, Boring Bars, Specialty Tools, Saw Blades","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools","Abrasives & Finishing","Sawing"],"website":"https://www.gemtool.com.tw/en","active":true},{"id":"S028","name":"Gifu Enterprise Co., Ltd","nameZh":"吉輔企業有限公司","booth":"W3040","building":"West Exhibition Hall","category":"Components","products":"Automatic tool changers; ATC mechanisms; machining-center peripheral equipment","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["ATC & Tool Changing","Automation Systems"],"website":"https://www.atcgifu.com/eng/index.php","active":true},{"id":"S029","name":"GIZIN INTERNATIONAL CO., LTD.","nameZh":"吉徑科技股份有限公司","booth":"W4010-3","building":"West Exhibition Hall","category":"Components","products":"ATC Automatic Tool Changer and APC","industries":["Automotive & Mobility","Electronics & Digital Equipment","Robotics"],"solutions":[],"capabilities":["ATC & Tool Changing","Automation Systems"],"website":"https://www.gizin-atc.com/en-US/","active":true},{"id":"S030","name":"GRINTIMATE PRECISION INDUSTRY CO., LTD.","nameZh":"全鑫精密工業股份有限公司","booth":"E1009-8","building":"East Exhibition Hall","category":"Machine Tools","products":"High Efficiency of Horizontal Hydrostatic Rotary Surface Grinder","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Grinding"],"website":"https://www.grintimate.com/","active":true},{"id":"S031","name":"GSA TECHNOLOGY CO., LTD","nameZh":"旭陽國際精機股份有限公司","booth":"W2006","building":"West Exhibition Hall","category":"Components","products":"CNC Rotary Table-Worm Gear Series, CNC Rotary Table-Roller Gear Cam Series, CNC Rotary Table-Hirth Coupling Series, Turret","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Rotary Tables & Indexing","Gears & Gear Drives"],"website":"https://www.gsaplus.com.tw/en/","active":true},{"id":"S032","name":"HABOR PRECISION INC.","nameZh":"哈伯精密股份有限公司","booth":"W3052","building":"West Exhibition Hall","category":"Factory Solutions","products":"HIG, Oil Chiller, Grinding Liquid Chiller, EDM Liquid Chiller, Water Chiller, Air Cooler, Ventilation Filter","industries":["Mold & Die","Electronics & Digital Equipment","Automotive & Mobility"],"solutions":["Smart Energy Management"],"capabilities":["Lubrication, Cooling & Fluid Systems"],"website":"https://www.habor.com/en/","active":true},{"id":"S033","name":"HAN JIE MACHINERY CO., LTD.","nameZh":"瀚捷機械股份有限公司","booth":"E1023","building":"East Exhibition Hall","category":"Machine Tools","products":"Tube Benders, Wire Bender","industries":["Automotive & Mobility","Construction & Heavy Equipment","Energy & Power"],"solutions":[],"capabilities":["Tube & Wire Processing","Automation Systems"],"website":"https://www.hanjie.com.tw/en/","active":true},{"id":"S034","name":"Hann Kuen Machinery and Hardware Co Ltd","nameZh":"翰坤五金機械有限公司","booth":"S1078","building":"South Exhibition Hall","category":"Components","products":"Drilling heads; tapping heads; boring/milling heads; built-in motor spindles; servo/hydraulic slide tables","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Spindles","Drilling","Milling","Hydraulics & Pneumatics"],"website":"https://www.hardy-tw.com/","active":true},{"id":"S035","name":"HER BERT ENTERPRISE CO., LTD.","nameZh":"豪伯特企業有限公司","booth":"W4010-4","building":"West Exhibition Hall","category":"Components","products":"Vises","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Workholding & Fixtures"],"website":"https://www.her-bert.com/en-US/","active":true},{"id":"S036","name":"HG TECHNOLOGY CO., LTD.","nameZh":"虹鉅科技有限公司","booth":"W1053","building":"West Exhibition Hall","category":"Components","products":"Carbide end mills, Dental Applications, Exchangeable head end mills, Threading Tools, Chamfering Tools, Drilling, Reaming, Carbide end mills","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools"],"website":"https://www.hgt.com.tw/","active":true},{"id":"S037","name":"Holer Cutting Tool Co., Ltd","nameZh":"鶴峻實業有限公司","booth":"W3065","building":"West Exhibition Hall","category":"Components","products":"Swiss Type CNC Head-Sliding Lathe Tool, Tungsten Carbide End Mills, Tungsten Carbide Drills, Circular Sawblade & Other Knives Series","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools","Sawing"],"website":"https://www.hol-drill.com.tw/eng/","active":true},{"id":"S038","name":"HOMGE MACHINERY INDUSTRIAL CO., LTD.","nameZh":"恒佶工業有限公司","booth":"W4010-13","building":"West Exhibition Hall","category":"Components","products":"FIVE-AXIS ADJUSTABLE SELF-CENTERING VISE, ZERO POINT QUICK CHANGE DEVICES","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Workholding & Fixtures"],"website":"https://www.homge.com.tw/","active":true},{"id":"S039","name":"HONWAY MATERIALS CO., LTD.","nameZh":"宏崴實業有限公司","booth":"W4002","building":"West Exhibition Hall","category":"Components","products":"Diamond powder; diamond paste/slurry; grinding compounds; precision polishing abrasives; diamond/CBN tools","industries":["Semiconductor","Electronics & Digital Equipment","Mold & Die","Medical / Dental"],"solutions":[],"capabilities":["Abrasives & Finishing","Cutting Tools"],"website":"https://honwaygroup.com/en/","active":true},{"id":"S040","name":"HOSEA PRECISION CO., LTD.","nameZh":"和昕精密科技有限公司","booth":"W3062","building":"West Exhibition Hall","category":"Components","products":"CNC Rotary Table (Pneumatic System), CNC Rotary Table (Hydraulic System), CNC Rotary Table (Heavy Duty), CNC Index Table, Hydraulic Index Table","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Rotary Tables & Indexing","Hydraulics & Pneumatics"],"website":"http://hosea-world.com/","active":true},{"id":"S041","name":"HUI BAO ENTERPRISE CO., LTD.","nameZh":"輝寶實業有限公司","booth":"W4010-5","building":"West Exhibition Hall","category":"Components","products":"Pneumatic Tools/Units","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Hydraulics & Pneumatics"],"website":"https://www.thb.com.tw/","active":true},{"id":"S042","name":"I TINE ENTERPRISE CO., LTD.","nameZh":"益鋌企業有限公司","booth":"W4010-6","building":"West Exhibition Hall","category":"Components","products":"Tool Holder","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Tool Holders & Toolholding"],"website":"https://www.itine-tw.com/","active":true},{"id":"S043","name":"INDUSTRIAL TECHNOLOGY RESEARCH INSTITUTE","nameZh":"財團法人工業技術研究院","booth":"W4010-10","building":"West Exhibition Hall","category":"Components","products":"Mechanical Components","industries":["Semiconductor","Electronics & Digital Equipment","Robotics","Energy & Power"],"solutions":[],"capabilities":["Smart Manufacturing & IoT","Machine Monitoring","Measurement & Inspection","Robotics"],"website":"https://www.itri.org.tw/english/","active":true},{"id":"S044","name":"INNGRIT INC.","nameZh":"英貴爾科技股份有限公司","booth":"W3029","building":"West Exhibition Hall","category":"Components","products":"Zero-point clamping systems; clamping plates; workholding systems","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":["Robotics & Automation Integration"],"capabilities":["Workholding & Fixtures"],"website":"https://www.inngrit.com.tw/","active":true},{"id":"S045","name":"JETON R/D & MFG. INC","nameZh":"宏玥工業股份有限公司","booth":"W3028","building":"West Exhibition Hall","category":"Components","products":"Coolant hoses; spray nozzles; vacuum tubes; modular hose systems","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Lubrication, Cooling & Fluid Systems"],"website":"https://www.jeton.com.tw/","active":true},{"id":"S046","name":"Jia Chen Precision Industry Co., Ltd.","nameZh":"佳宸精密實業有限公司","booth":"W3025","building":"West Exhibition Hall","category":"Components","products":"Roller Cam Bear","industries":["Robotics","Automotive & Mobility"],"solutions":[],"capabilities":["Gears & Gear Drives"],"website":"https://www.jiachen.com.tw/index_en","active":true},{"id":"S047","name":"JIN LI CHENG CUTTING TOOL CO.,LTD. (*)","nameZh":"金利成切削刀具有限公司","booth":"W3063","building":"West Exhibition Hall","category":"Components","products":"Carbide end mills; drills; reamers; aerospace milling cutters; thread mills; slitting saws; custom form cutters","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools","Sawing"],"website":"https://www.endmill-tw.com/webls-en-us/index.html","active":true},{"id":"S048","name":"JPC connectivity Inc.","nameZh":"佳必琪國際股份有限公司","booth":"E1009-7","building":"East Exhibition Hall","category":"Components","products":"CNC, Cable, Connector","industries":["Semiconductor","Electronics & Digital Equipment","Robotics"],"solutions":[],"capabilities":["Electrical & Connectivity","CNC Controls"],"website":"https://www.jpcco.com/lang/en","active":true},{"id":"S049","name":"KAI HUNG MACHINERY CO., LTD.","nameZh":"凱泓機械股份有限公司","booth":"E1009-5","building":"East Exhibition Hall","category":"Machine Tools","products":"CNC Multi-Spindles Rotary Transfer Machine","industries":["Automotive & Mobility","Electronics & Digital Equipment"],"solutions":["Robotics & Automation Integration"],"capabilities":["Milling","Turning","Drilling","Automation Systems"],"website":"https://www.kaihung.com/en/?","active":true},{"id":"S050","name":"KEYARROW(TAIWAN)CO.,LTD.","nameZh":"台灣引興股份有限公司","booth":"W2010","building":"West Exhibition Hall","category":"Components","products":"Telescopic covers; way covers; bellows; machine protection systems","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Machine Protection & Covers"],"website":"https://www.keyarrow.com/","active":true},{"id":"S051","name":"KING SHANG YUAN MACHINERY CO., LTD","nameZh":"金上源機械有限公司","booth":"E1017","building":"East Exhibition Hall","category":"Machine Tools","products":"Hydraulic Press, Rotatory-Type Hydraulic Press, Hydraulic Press for Lock Nut Notches and Assembly","industries":["Automotive & Mobility","Construction & Heavy Equipment"],"solutions":[],"capabilities":["Hydraulics & Pneumatics","Metal Forming & Presses"],"website":"https://www.ksy-machine.com/en-US/","active":true},{"id":"S052","name":"Linmac Machinery Inc.","nameZh":"統竣國際有限公司","booth":"S2028","building":"South Exhibition Hall","category":"Machine Tools","products":"Mill & Drill Combo, Belt Grinder, Drill, Saw, Pipe Notcher, Cooling Fan","industries":["Construction & Heavy Equipment","Automotive & Mobility"],"solutions":[],"capabilities":["Milling","Drilling","Sawing","Grinding","Tube & Wire Processing"],"website":"https://www.linmac.com.tw/","active":true},{"id":"S053","name":"Long Sheng Precision Industrial Co., Ltd.","nameZh":"隆升精密工業股份有限公司","booth":"S1086","building":"South Exhibition Hall","category":"Components","products":"Precision machine-tool components; precision industrial components","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Machine Structures & Castings"],"website":"http://www.longsheng-tw.com/en/index.html","active":true},{"id":"S054","name":"LV International Co., LTD.","nameZh":"元駿國際有限公司","booth":"W3049","building":"West Exhibition Hall","category":"Components","products":"Standard End Mills, Grinding Tools, Cutting Tools, Functional End Mills, Special End Mills","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools","Abrasives & Finishing"],"website":"https://www.lv-tool.com.tw/","active":true},{"id":"S055","name":"Matrix Precision Co., Ltd","nameZh":"邁萃斯精密股份有限公司","booth":"S2019","building":"South Exhibition Hall","category":"Machine Tools","products":"Gear Cutting Tools, CNC Gear Machines","industries":["Aerospace","Automotive & Mobility"],"solutions":[],"capabilities":["Grinding","Cutting Tools","Gears & Gear Drives"],"website":"https://www.matrix-machine.tw/en/index.html","active":true},{"id":"S056","name":"MicroLab Precision Technology Co., Ltd","nameZh":"矩將科技有限公司 ","booth":"W3026","building":"West Exhibition Hall","category":"Components","products":"Machining Center Spindle, High Speed Built-in Motor, Spindle & Rotary Table for 5-Axis Series, Spindle for Multi-Machining Series","industries":["Aerospace","Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Spindles","Rotary Tables & Indexing","5-Axis Machining"],"website":"https://www.twspindle.com/","active":true},{"id":"S057","name":"MIYANACH IND. CO., LTD.","nameZh":"義錩工業股份有限公司","booth":"W3048","building":"West Exhibition Hall","category":"Machine Tools","products":"METAL TCT HOLE SAWS, WOOD TCT HOLE SAWS, TCT ANNULAR CUTTERS, MAGNETIC DRILLING MACHINES, DRILLING MACHINE FOR PIPES","industries":["Construction & Heavy Equipment","Automotive & Mobility"],"solutions":[],"capabilities":["Drilling","Cutting Tools","Tube & Wire Processing"],"website":"https://www.miyanach.com/en-US/","active":true},{"id":"S058","name":"NEW YU WEI INDUSTRIAL CO., LTD.","nameZh":"羽威實業股份有限公司","booth":"W3022","building":"West Exhibition Hall","category":"Components","products":"Broaches; broaching tools; internal/external profile broaching tools","industries":["Automotive & Mobility","Aerospace","Energy & Power"],"solutions":[],"capabilities":["Broaching","Cutting Tools"],"website":"https://yuweibroach.com/en/home/","active":true},{"id":"S059","name":"NINE9 (**)","nameZh":"耐久切削工具有限公司","booth":"W1061","building":"West Exhibition Hall","category":"Components","products":"NineSwiss Modular Toolholder, Deburring & Threading Mill, Spot Drill, i-Center, Engraving Tools, Chamfer Mill, Corner Rounding, NC Helix Drill, Super Drill, Super Power Drill, Boring Tool, Power Mill, Ergo ER Taper-shank Indexable Cutters","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools","Tool Holders & Toolholding"],"website":"https://nine9.jic-tools.com.tw/","active":true},{"id":"S060","name":"PALMARY MACHINERY CO LTD","nameZh":"大光長榮機械股份有限公司","booth":"S2012","building":"South Exhibition Hall","category":"Machine Tools","products":"Centerless grinders; cylindrical grinders; internal grinders; vertical grinders; surface grinders","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die","Energy & Power"],"solutions":[],"capabilities":["Grinding"],"website":"https://www.palmary.com/","active":true},{"id":"S061","name":"PARKSON WU INDUSTRIAL CO., LTD","nameZh":"寶嘉誠工業股份有限公司","booth":"W3041","building":"West Exhibition Hall","category":"Components","products":"CNC Rotary Table And Tailstock, Roller Cam Rotary Table, CNC Tilting Rotary Table, Horizontal CNC Rotary Table, Automatic Pallet Changer, Hydraulic Index Table, Swing Spindle Head, CNC Rotary Table (Stainless Steel)-FOR EDM, Direct-Drive High Speed, Rotary Table, Flexible manufacturing system (FMS), Precision Reduction Gear","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Semiconductor","Energy & Power","Robotics"],"solutions":[],"capabilities":["Rotary Tables & Indexing","Gears & Gear Drives","Automation Systems"],"website":"https://www.parkson-wu.com/en-US/","active":true},{"id":"S062","name":"PERFECT MACHINE CO., LTD.","nameZh":"普發工業股份有限公司","booth":"S1081","building":"South Exhibition Hall","category":"Machine Tools","products":"Surface grinder","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die","Energy & Power"],"solutions":[],"capabilities":["Grinding"],"website":"https://www.perfectmachine.com.tw/","active":true},{"id":"S063","name":"RI HSIUNG PRECISION TECH CO., LTD.","nameZh":"日翔精技有限公司","booth":"W3064","building":"West Exhibition Hall","category":"Components","products":"Precision machine-tool components; precision workholding/accessory components","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools","Filtration & Purification Systems"],"website":"https://rhptec.com/","active":true},{"id":"S064","name":"ROYAL PRECISION TOOLS CORPORATION","nameZh":"羅翌科技股份有限公司","booth":"W3021","building":"West Exhibition Hall","category":"Components","products":"SPINDLE","industries":["Aerospace","Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Spindles"],"website":"https://www.royal-spindles.com/","active":true},{"id":"S065","name":"SAFEWAY MACHINERY INDUSTRY CORPORATION","nameZh":"協威機械工業股份有限公司","booth":"W3002","building":"West Exhibition Hall","category":"Components","products":"Machine Vise, NC Rotary Table, MC Tooling Blocks, Drill Grinding Machines","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Workholding & Fixtures","Rotary Tables & Indexing","Grinding"],"website":"https://safeway-vise.com/en/","active":true},{"id":"S066","name":"SANJET INTERNATIONAL CO., LTD.","nameZh":"聖杰國際股份有限公司","booth":"W4010-9","building":"West Exhibition Hall","category":"Automation","products":"Industrial robots; SCARA robots; drum/chain tool magazines; automatic tool changer systems; tool-removal cylinders","industries":["Automotive & Mobility","Electronics & Digital Equipment","Robotics"],"solutions":["Robotics & Automation Integration"],"capabilities":["Robotics","Automation Systems","ATC & Tool Changing"],"website":"https://www.sanjet.com.tw/","active":true},{"id":"S067","name":"SEA SHORE DIAMOND INDUSTRIAL CO., LTD.","nameZh":"石秀鑽石工業股份有限公司","booth":"W4009","building":"West Exhibition Hall","category":"Components","products":"Grinding Wheels, Mounted Points, Diamond and CBN File, Saw Blades, Diamond Dressers, Resin Bond Diamond & CBN Tools, Standard Wheel Shapes","industries":["Semiconductor","Electronics & Digital Equipment","Mold & Die","Medical / Dental"],"solutions":[],"capabilities":["Abrasives & Finishing","Cutting Tools","Sawing"],"website":"https://www.ssdc-tw.com/en-US/","active":true},{"id":"S068","name":"SHIN-YAIN INDUSTRIAL CO., LTD.","nameZh":"心源工業股份有限公司","booth":"W4010-2; W1061","building":"West Exhibition Hall","category":"Components","products":"TOOL HOLDER, COLLETS, BMT TOOL HOLDER(STATIC & DRIVEN TYPE), MEASURING TOOL FOR CNC MACHINE, WORK-PIECE QUICK CHANGE SYSTEM","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Tool Holders & Toolholding","Workholding & Fixtures","Measurement & Inspection","Cutting Tools"],"website":"https://www.syic.com/product.html","active":true},{"id":"S070","name":"SOCO Machinery Co., Ltd.","nameZh":"和和機械股份有限公司","booth":"E1021","building":"East Exhibition Hall","category":"Components","products":"Tube cutting machines; tube bending machines; chamfering machines; end-finishing systems","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":["Robotics & Automation Integration"],"capabilities":["Tube & Wire Processing","Sawing","Abrasives & Finishing"],"website":"https://www.soco.com.tw/","active":true},{"id":"S071","name":"SPINDLEX TECHNOLOGIES CO., LTD.","nameZh":"先鎰企業廠股份有限公司","booth":"W3020","building":"West Exhibition Hall","category":"Components","products":"Milling Spindles, Internal Grinding Spindles, External Grinding Spindles, Dressing Spindles","industries":["Aerospace","Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":["Intelligent Machining"],"capabilities":["Spindles","Grinding"],"website":"https://www.spindlex-tech.com/en-US/","active":true},{"id":"S072","name":"SunUs TECH CO., LTD.","nameZh":"晶傑精機有限公司","booth":"W3119","building":"West Exhibition Hall","category":"Components","products":"Planetary gearboxes; precision reducers","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Gears & Gear Drives"],"website":"https://www.sunusdrive.com/","active":true},{"id":"S073","name":"SUPER MASTER DEVELOPING CO., LTD.","nameZh":"騰立實業有限公司","booth":"W4010-16","building":"West Exhibition Hall","category":"Components","products":"Patented Composite 7° off set Air Tools (Rotary Trigger)","industries":["Automotive & Mobility","Construction & Heavy Equipment"],"solutions":[],"capabilities":["Hydraulics & Pneumatics"],"website":"https://www.cens.com/ishow/s/supermaster/home.html","active":true},{"id":"S074","name":"TAI CHONG CO., LTD","nameZh":"大昶貿易行股份有限公司","booth":"W3037","building":"West Exhibition Hall","category":"Components","products":"ELECTRO-PERMANENT MAGNETIC CHUCK(EPM), ELECTROMAGNETIC CHUCK(ELC), PERMANENT MAGNETIC LIFTER, MAGNETIC TOOLS","industries":["Automotive & Mobility","Mold & Die","Electronics & Digital Equipment"],"solutions":[],"capabilities":["Workholding & Fixtures"],"website":"https://www.taichong.com.tw/webls-en-us/index.html","active":true},{"id":"S075","name":"TECH WAY ADVANCED MATERIALS CO., LTD","nameZh":"台煒有限公司","booth":"W2059","building":"West Exhibition Hall","category":"Components","products":"Advanced materials and precision industrial material solutions","industries":["Semiconductor","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Machine Protection & Covers"],"website":"https://www.twam.com.tw/","active":true},{"id":"S076","name":"TE-SHIN Precision Technology CO., LTD.","nameZh":"德士精科股份有限公司","booth":"W2005","building":"West Exhibition Hall","category":"Components","products":"Machine Tools Components, Semiconductor Components","industries":["Semiconductor","Electronics & Digital Equipment"],"solutions":[],"capabilities":["Rotary Tables & Indexing","ATC & Tool Changing","Gears & Gear Drives","Workholding & Fixtures"],"website":"https://www.dexcams.com/en","active":true},{"id":"S077","name":"Theta Precision Co., Ltd.","nameZh":"釸達精密股份有限公司","booth":"W3003","building":"West Exhibition Hall","category":"Components","products":"Built-in spindles; motor spindles; high-speed spindles","industries":["Aerospace","Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Spindles"],"website":"http://www.theta-spindle.com/","active":true},{"id":"S078","name":"Tien Ding Industrial Co., LTD","nameZh":"添鼎興業股份有限公司","booth":"W2030","building":"West Exhibition Hall","category":"Components","products":"Telescopic Covers","industries":["Automotive & Mobility","Aerospace","Electronics & Digital Equipment","Medical / Dental","Construction & Heavy Equipment"],"solutions":[],"capabilities":["Machine Protection & Covers"],"website":"https://www.tdcover.com/en-US/","active":true},{"id":"S079","name":"TJR Precision Technology Co., Ltd","nameZh":"潭佳精密科技股份有限公司","booth":"W2062","building":"West Exhibition Hall","category":"Components","products":"CNC rotary tables; 4th/5th-axis rotary tables; indexing tables","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Rotary Tables & Indexing"],"website":"https://www.tjr.com.tw/","active":true},{"id":"S080","name":"Tongtai Machine Tool Co., Ltd.","nameZh":"東台精機股份有限公司","booth":"E1009-3","building":"East Exhibition Hall","category":"Machine Tools","products":"Machining centers; CNC lathes; multi-tasking machines; additive/hybrid and automation solutions","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die","Energy & Power"],"solutions":["Intelligent Machining","Robotics & Automation Integration","Smart Monitoring & Industrial IoT","Predictive Maintenance & Equipment Diagnostics"],"capabilities":["Milling","Turning","5-Axis Machining","Automation Systems","Smart Manufacturing & IoT"],"website":"https://www.tongtai.com.tw/","active":true},{"id":"S081","name":"TOPWORK INDUSTRY Co. Ltd.","nameZh":"鼎維工業股份有限公司","booth":"S2011","building":"South Exhibition Hall","category":"Machine Tools","products":"CNC tool grinders; cutter grinders; grinding machines","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die","Energy & Power"],"solutions":[],"capabilities":["Grinding","Cutting Tools"],"website":"https://www.topworktw.com/","active":true},{"id":"S082","name":"VERNAL ENGINEERING CO.,LTD.","nameZh":"義高工業股份有限公司","booth":"W4010-1","building":"West Exhibition Hall","category":"Components","products":"driven tool holders for Swiss type CNC machine","industries":["Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment"],"solutions":[],"capabilities":["Tool Holders & Toolholding"],"website":"https://www.vernal.com.tw/index/lang/en","active":true},{"id":"S083","name":"VERTEX MACHINERY WORKS CO. LTD.","nameZh":"維昶機具廠有限公司","booth":"S3052","building":"South Exhibition Hall","category":"Components","products":"Vises; rotary tables; dividing heads; tool presetters; magnetic chucks; workholding accessories","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Mold & Die"],"solutions":[],"capabilities":["Workholding & Fixtures","Rotary Tables & Indexing","Measurement & Inspection"],"website":"https://www.vertex-tw.com/","active":true},{"id":"S084","name":"WALRUS PUMP Co., Ltd.","nameZh":"華樂士泵浦股份有限公司","booth":"W4075","building":"West Exhibition Hall","category":"Components","products":"Industrial pumps; coolant pumps; centrifugal pumps","industries":["Automotive & Mobility","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Lubrication, Cooling & Fluid Systems"],"website":"https://www.walruspump.com/","active":true},{"id":"S085","name":"WALSIN LIHWA CORPORATION","nameZh":"華新麗華股份有限公司","booth":"W4010-12","building":"West Exhibition Hall","category":"Components","products":"Stainless steel bar","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Energy & Power","Marine & Shipbuilding","Oil & Gas / Petrochemical","Construction & Heavy Equipment"],"solutions":[],"capabilities":["Industrial Materials"],"website":"https://www.walsin.com/en/","active":true},{"id":"S086","name":"YANG GANG CASTING CORP.","nameZh":"揚鋼鑄造股份有限公司","booth":"W4010-7","building":"West Exhibition Hall","category":"Components","products":"The major machine castings (Materials: FC300, FC350, FCD450)","industries":["Automotive & Mobility","Energy & Power","Construction & Heavy Equipment","Mold & Die"],"solutions":[],"capabilities":["Machine Structures & Castings"],"website":"https://en.yanggang.com.tw/","active":true},{"id":"S087","name":"YEONG CHIN MACHINERY INDUSTRIES CO., LTD. (*)","nameZh":"永進機械工業股份有限公司","booth":"E3008","building":"East Exhibition Hall","category":"Machine Tools","products":"Vertical machining centers; horizontal machining centers; CNC turning centers; 5-axis machines","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die","Energy & Power"],"solutions":[],"capabilities":["Milling","Turning","5-Axis Machining","Automation Systems"],"website":"https://www.ycmcnc.com/","active":true},{"id":"S088","name":"YEU LIAN ELECTRONICS CO., LTD.","nameZh":"宇聯電子有限公司","booth":"W3023","building":"West Exhibition Hall","category":"Automation","products":"CNC Machine Operator Control Panel, I/O Relay Module Interface Board, CNC Handy MPG Pendant Encoder, Digital Code Rotary Switch, Manual Pulse Generator Engraving Handwheel","industries":["Electronics & Digital Equipment","Robotics","Automotive & Mobility"],"solutions":[],"capabilities":["CNC Controls","Electrical & Connectivity"],"website":"https://www.yeulian.com/","active":true},{"id":"S089","name":"YONG JU PRECISION TECHNOLOGY CO., LTD.","nameZh":"永鉅精密科技股份有限公司","booth":"E1009-6","building":"East Exhibition Hall","category":"Machine Tools","products":"CNC Double column machining center / CNC Horizontal boring machine","industries":["Aerospace","Automotive & Mobility","Energy & Power","Mold & Die"],"solutions":[],"capabilities":["Milling","Drilling"],"website":"https://www.fourstarcnc.com/","active":true},{"id":"S090","name":"YUAN JUN FONG CASTING CO., LTD","nameZh":"源潤豐鑄造股份有限公司","booth":"W3090","building":"West Exhibition Hall","category":"Components","products":"Iron castings for lathes; milling machines; grinding machines; boring machines; EDM machines; CNC machining centers; special-purpose machines","industries":["Automotive & Mobility","Energy & Power","Construction & Heavy Equipment","Mold & Die"],"solutions":[],"capabilities":["Machine Structures & Castings"],"website":"https://www.yjfcasting.com/index.html","active":true},{"id":"S091","name":"Yuan Jun Industry Co., Ltd .","nameZh":"圓竣工業股份有限公司","booth":"S1075","building":"South Exhibition Hall","category":"Machine Tools","products":"Band Sawing Machine","industries":["Automotive & Mobility","Construction & Heavy Equipment","Energy & Power"],"solutions":[],"capabilities":["Sawing"],"website":"https://www.sawingmachine.com.tw/index.html","active":true},{"id":"S092","name":"YUAN YI CHANG Machinery Co.,Ltd.","nameZh":"原億昌機械股份有限公司","booth":"W4058","building":"West Exhibition Hall","category":"Components","products":"Rack, Cylindrical Pinion, Felt Lubrication Pinion, Flange Pinion, Spline Pinion, Welded Flange Pinion, Guideway Rack, Roller Series","industries":["Robotics","Automotive & Mobility","Electronics & Digital Equipment"],"solutions":[],"capabilities":["Gears & Gear Drives","Linear Motion"],"website":"https://www.yycmotion.com/en-US/","active":true},{"id":"S093","name":"ZHI SHENG TECHNOLOGY CO.,LTD.","nameZh":"智生科技有限公司","booth":"W3066","building":"West Exhibition Hall","category":"Components","products":"CNC Cutting Tools","industries":["Aerospace","Automotive & Mobility","Medical / Dental","Electronics & Digital Equipment","Mold & Die"],"solutions":[],"capabilities":["Cutting Tools"],"website":"https://en.gtoptool-tw.com/","active":true}];
+let suppliers = EMBEDDED_SUPPLIERS.filter(s => s.active !== false);
+
+const SESSION_ID = (window.crypto && crypto.randomUUID)
+  ? crypto.randomUUID()
+  : `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+let currentResults = new Map();
+
+function buyerSnapshot(){
+  return {
+    buyerCompany: document.getElementById("company").value.trim(),
+    contactPerson: document.getElementById("contactPerson").value.trim(),
+    companyEmail: document.getElementById("companyEmail").value.trim(),
+    buyerType: document.getElementById("buyerType").value,
+    industries: selectedFrom("industries"),
+    solutions: selectedFrom("solutions"),
+    capabilities: selectedFrom("needs"),
+    partnershipGoal: selectedFrom("goals").join("; ")
+  };
+}
+
+function sendMatchRecord(supplier, recordAction, meetingTime=""){
+  if(!GOOGLE_SHEET_API_URL) return;
+
+  const snap = buyerSnapshot();
+  const result = currentResults.get(supplier.id) || supplier;
+
+  const payload = {
+    action: "record",
+    sessionId: SESSION_ID,
+    ...snap,
+    supplierId: supplier.id,
+    supplier: supplier.name,
+    matchScore: result.score ?? "",
+    rank: result.rank ?? "",
+    recordAction,
+    meetingTime
+  };
+
+  fetch(GOOGLE_SHEET_API_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {"Content-Type": "text/plain;charset=utf-8"},
+    body: JSON.stringify(payload),
+    keepalive: true
+  }).catch(err => console.warn("Match record write failed", err));
+}
+
+function recordGeneratedMatches(arr){
+  arr.forEach((supplier, index) => {
+    const withRank = {...supplier, rank:index + 1};
+    currentResults.set(supplier.id, withRank);
+    sendMatchRecord(withRank, "Match Generated");
+  });
+}
+
+function handleInterested(id){
+  const supplier = currentResults.get(id);
+  if(!supplier) return;
+  sendMatchRecord(supplier, "Interested");
+  addToShortlist(supplier, "Interested");
+  openModal(id);
+}
+
+function handleSave(id, btn){
+  const supplier = currentResults.get(id);
+  if(!supplier) return;
+  sendMatchRecord(supplier, "Saved");
+  addToShortlist(supplier, "Saved");
+  btn.textContent = "Saved ✓";
+}
+
+const excludedSupplierIds = new Set();
+let lastMatchContext = null;
+
+function handleNotRelevant(id, btn){
+  const supplier = currentResults.get(id);
+  if(!supplier) return;
+  sendMatchRecord(supplier, "Not Relevant");
+  excludedSupplierIds.add(id);
+  refreshRecommendations(false);
+}
+
+function selectedFrom(groupId){
+  return [...document.querySelectorAll(`#${groupId} .tag.active`)].map(x=>x.textContent.trim());
+}
+
+function matchedTags(selected, available){
+  const set = new Set(available || []);
+  return selected.filter(x=>set.has(x));
+}
+
+// Equal contribution within each selected category; selected category weights are
+// normalized so buyers need not select from every category.
+function scoreSupplier(s, selectedNeeds, selectedSolutions, selectedIndustries){
+  const cap = matchedTags(selectedNeeds,s.capabilities);
+  const sol = matchedTags(selectedSolutions,s.solutions);
+  const ind = matchedTags(selectedIndustries,s.industries);
+  const dimensions = [
+    {selected:selectedNeeds, matched:cap, weight:50},
+    {selected:selectedSolutions, matched:sol, weight:30},
+    {selected:selectedIndustries, matched:ind, weight:20}
+  ];
+  const denominator=dimensions.reduce((a,d)=>a+(d.selected.length?d.weight:0),0);
+  const numerator=dimensions.reduce((a,d)=>a+(d.selected.length?d.weight*d.matched.length/d.selected.length:0),0);
+  const score=denominator?100*numerator/denominator:0;
+  const productScore=selectedNeeds.length?cap.length/selectedNeeds.length:0;
+  const solutionScore=selectedSolutions.length?sol.length/selectedSolutions.length:0;
+  return {...s,score,productScore,solutionScore,matchedCapabilities:cap,matchedSolutions:sol,matchedIndustries:ind,
+    matchCount:cap.length+sol.length+ind.length};
+}
+
+function buildWhy(s){
+  const primary = s.matchedCapabilities || [];
+  const secondary = [...(s.matchedSolutions || []), ...(s.matchedIndustries || [])];
+
+  const primaryBlock = primary.length
+    ? `<div class="small-note" style="margin-top:10px;font-weight:700;color:var(--accent-dark)">Best match for</div>
+       <div class="match-tags">${primary.map(t=>`<span class="match-tag">${escapeHtml(t)}</span>`).join("")}</div>`
+    : "";
+
+  const secondaryBlock = secondary.length
+    ? `<div class="small-note" style="margin-top:8px;font-weight:700;color:var(--accent-dark)">Also matches</div>
+       <div class="match-tags">${secondary.map(t=>`<span class="match-tag">${escapeHtml(t)}</span>`).join("")}</div>`
+    : "";
+
+  return `<div class="why"><b>Products:</b> ${escapeHtml(s.products || "—")}</div>${primaryBlock}${secondaryBlock}`;
+}
+
+function safeWebsiteUrl(value){
+  const raw = String(value || "").trim();
+  if(!raw) return "";
+  if(/^https?:\/\//i.test(raw)) return escapeHtml(raw);
+  return escapeHtml("https://" + raw.replace(/^\/+/, ""));
+}
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function showInitialState(){
+  currentResults = new Map();
+  document.getElementById("matches").innerHTML =
+    `<div class="empty">Select your criteria above, then click <b>Find My Matches</b> to see recommended Taiwan suppliers.</div>`;
+  document.getElementById("summary").textContent = `${suppliers.length} suppliers available`;
+}
+
+document.getElementById("company").addEventListener("input", function(){
+  if(this.value.trim()){
+    document.getElementById("companyError").style.display = "none";
+    this.style.borderColor = "";
+  }
+});
+
+function baseRankedList(selectedNeeds, selectedSolutions, selectedIndustries){
+  return suppliers
+    .filter(s=>!excludedSupplierIds.has(s.id))
+    .map(s=>scoreSupplier(s, selectedNeeds, selectedSolutions, selectedIndustries))
+    .sort((a,b)=> b.score-a.score
+      || b.productScore-a.productScore
+      || b.solutionScore-a.solutionScore
+      || b.matchedIndustries.length-a.matchedIndustries.length
+      || a.name.localeCompare(b.name));
+}
+
+// Show the six highest-ranked suppliers with at least one matching tag.
+function refreshRecommendations(recordMatches=true){
+  if(!lastMatchContext)return;
+  const {selectedNeeds,selectedSolutions,selectedIndustries}=lastMatchContext;
+  const ranked=baseRankedList(selectedNeeds,selectedSolutions,selectedIndustries).filter(s=>s.matchCount>0);
+  const top=ranked.slice(0,6).map((s,i)=>({...s,rank:i+1}));
+  currentResults=new Map(top.map(s=>[s.id,s]));
+  if(recordMatches)recordGeneratedMatches(top);
+  render(top,ranked.length);
+}
+
+function rerank(){
+  const companyInput = document.getElementById("company");
+  const companyError = document.getElementById("companyError");
+  const companyName = companyInput.value.trim();
+
+  if(!companyName){
+    companyError.style.display = "block";
+    companyInput.style.borderColor = "#b42318";
+    companyInput.focus();
+    return;
+  }
+
+  companyError.style.display = "none";
+  companyInput.style.borderColor = "";
+
+  const contact=document.getElementById("contactPerson");
+  const email=document.getElementById("companyEmail");
+  if(!contact.value.trim()){contact.setCustomValidity("Please enter the contact person.");contact.reportValidity();contact.setCustomValidity("");return;}
+  if(!email.value.trim()){email.setCustomValidity("Please enter your company email.");email.reportValidity();email.setCustomValidity("");return;}
+  if(!email.checkValidity()){email.reportValidity();return;}
+  const selectedNeeds = selectedFrom("needs");
+  const selectedIndustries = selectedFrom("industries");
+  const selectedSolutions = selectedFrom("solutions");
+
+  if(selectedNeeds.length+selectedIndustries.length+selectedSolutions.length>5){alert("Please select no more than 5 tags.");return;}
+  if(!selectedNeeds.length && !selectedIndustries.length && !selectedSolutions.length){
+    const counter=document.getElementById("tagCounter");
+    counter.textContent="Please select at least one tag before submitting.";
+    counter.style.color="#b42318";
+    counter.scrollIntoView({behavior:"smooth",block:"center"});
+    return;
+  }
+
+  // A new search starts a fresh exclusion set. Non Relevant applies to the
+  // current recommendation session and is remembered while replacements are shown.
+  excludedSupplierIds.clear();
+  lastMatchContext = {selectedNeeds, selectedSolutions, selectedIndustries};
+  refreshRecommendations(true);
+}
+
+function render(arr, total=suppliers.length){
+  const box=document.getElementById("matches");
+  box.innerHTML="";
+
+  arr.forEach(s=>{
+    const d=document.createElement("div");
+    d.className="match";
+    const location = [s.category, s.booth ? `${s.booth.includes(";") ? "Booths" : "Booth"} ${escapeHtml(s.booth)}` : "", s.building].filter(Boolean).join(" · ");
+
+    d.innerHTML=`
+      <div class="score" style="--score:${s.score}"><span>${Math.round(s.score)}</span></div>
+      <div>
+        <h3>${escapeHtml(s.name)}</h3>
+        <div class="meta">${escapeHtml(location)}</div>
+        ${buildWhy(s)}
+      </div>
+      <div class="actions">
+        ${s.website ? `<a class="website" href="${safeWebsiteUrl(s.website)}" target="_blank" rel="noopener noreferrer">Website ↗</a>` : ""}
+        <button class="good" onclick='handleInterested(${JSON.stringify(s.id)})'>Interested</button>
+        <button class="ghost" onclick='handleSave(${JSON.stringify(s.id)}, this)'>Save</button>
+        <button class="danger" onclick='handleNotRelevant(${JSON.stringify(s.id)}, this)'>Non Relevant</button>
+      </div>`;
+    box.appendChild(d);
+  });
+
+  const excludedNote = excludedSupplierIds.size ? ` · ${excludedSupplierIds.size} marked Non Relevant` : "";
+  document.getElementById("summary").textContent=`Top ${arr.length} of ${total} matching suppliers${excludedNote}`;
+}
+
+async function loadSuppliers(){
+  if(!GOOGLE_SHEET_API_URL){
+    suppliers = EMBEDDED_SUPPLIERS.filter(s=>s.active!==false);
+    document.getElementById("supplierCount").textContent=suppliers.length;
+    showInitialState();
+    return;
+  }
+
+  try{
+    const response = await fetch(GOOGLE_SHEET_API_URL, {cache:"no-store"});
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    const incoming = Array.isArray(data) ? data : data.suppliers;
+    if(!Array.isArray(incoming)) throw new Error("Invalid supplier payload");
+    suppliers = incoming.filter(s=>s.active!==false);
+  }catch(err){
+    console.warn("Google Sheet load failed; using embedded supplier data.", err);
+    suppliers = EMBEDDED_SUPPLIERS.filter(s=>s.active!==false);
+  }
+
+  document.getElementById("supplierCount").textContent=suppliers.length;
+  showInitialState();
+}
+
+const TAG_LIMIT=5;
+function updateTagCounter(){
+  const count=document.querySelectorAll("#industries .tag.active, #solutions .tag.active, #needs .tag.active").length;
+  const counter=document.getElementById("tagCounter");
+  if(counter)counter.textContent=`${count} / ${TAG_LIMIT} tags selected${count===0 ? " · Select at least 1" : ""}`;
+}
+document.querySelectorAll(".tag").forEach(t=>{
+  t.onclick=()=>{
+    const isCriterion=!!t.closest("#industries,#solutions,#needs");
+    if(isCriterion&&!t.classList.contains("active")&&document.querySelectorAll("#industries .tag.active, #solutions .tag.active, #needs .tag.active").length>=TAG_LIMIT){
+      alert("You can select up to 5 tags in total. Deselect a tag first.");return;
+    }
+    t.classList.toggle("active");updateTagCounter();
+    const counter=document.getElementById("tagCounter");
+    if(counter)counter.style.color="var(--accent-dark)";
+  };
+});
+
+let activeMeetingSupplierId = "";
+let selectedMeetingDate = "";
+let bookedMeetingSlots = new Set();
+let bookingInProgress = false;
+
+const SHORTLIST_KEY = "jimtof2026_shortlist_v1";
+let shortlist = loadShortlist();
+
+
+
+function loadShortlist(){
+  try{
+    const raw = localStorage.getItem(SHORTLIST_KEY);
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){
+    return [];
+  }
+}
+
+function persistShortlist(){
+  try{
+    localStorage.setItem(SHORTLIST_KEY, JSON.stringify(shortlist));
+  }catch(e){
+    console.warn("Could not save shortlist", e);
+  }
+  renderShortlist();
+}
+
+function addToShortlist(supplier, status){
+  const existing = shortlist.find(item => item.id === supplier.id);
+  const normalizedStatus = status === "Interested" ? "Interested" : "Saved";
+  const matchSnapshot = {
+    productMatches: [...(supplier.matchedCapabilities || [])],
+    solutionMatches: [...(supplier.matchedSolutions || [])],
+    industryMatches: [...(supplier.matchedIndustries || [])]
+  };
+
+  if(existing){
+    if(normalizedStatus === "Interested") existing.status = "Interested";
+    existing.name = supplier.name || existing.name;
+    existing.nameZh = supplier.nameZh || existing.nameZh || "";
+    existing.booth = supplier.booth || existing.booth || "";
+    existing.building = supplier.building || existing.building || "";
+    existing.score = supplier.score ?? existing.score ?? "";
+    // Keep a snapshot of WHY the buyer saved this supplier at this moment.
+    existing.productMatches = matchSnapshot.productMatches;
+    existing.solutionMatches = matchSnapshot.solutionMatches;
+    existing.industryMatches = matchSnapshot.industryMatches;
+    existing.meetingTime = existing.meetingTime || "";
+  }else{
+    shortlist.push({
+      id: supplier.id,
+      name: supplier.name || "",
+      nameZh: supplier.nameZh || "",
+      booth: supplier.booth || "",
+      building: supplier.building || "",
+      score: supplier.score ?? "",
+      status: normalizedStatus,
+      productMatches: matchSnapshot.productMatches,
+      solutionMatches: matchSnapshot.solutionMatches,
+      industryMatches: matchSnapshot.industryMatches,
+      meetingTime: ""
+    });
+  }
+  persistShortlist();
+}
+
+function updateShortlistMeeting(supplierId, meetingTime){
+  const existing = shortlist.find(item => item.id === supplierId);
+  if(existing){
+    existing.status = "Interested";
+    existing.meetingTime = meetingTime;
+    persistShortlist();
+  }
+}
+
+function removeFromShortlist(id){
+  shortlist = shortlist.filter(item => item.id !== id);
+  persistShortlist();
+}
+
+function clearShortlist(){
+  if(!shortlist.length) return;
+  if(confirm("Clear all suppliers from your shortlist?")){
+    shortlist = [];
+    persistShortlist();
+  }
+}
+
+function renderShortlist(){
+  const list = document.getElementById("shortlistList");
+  const count = document.getElementById("shortlistCount");
+  if(!list || !count) return;
+
+  count.textContent = shortlist.length;
+
+  if(!shortlist.length){
+    list.className = "shortlist-empty";
+    list.innerHTML = "No suppliers saved yet.";
+    return;
+  }
+
+  list.className = "";
+  list.innerHTML = shortlist.map(item => {
+    const boothParts = [];
+    if(item.booth) boothParts.push(`${item.booth.includes(";") ? "Booths" : "Booth"} ${escapeHtml(item.booth)}`);
+    if(item.building) boothParts.push(escapeHtml(item.building));
+    const meta = boothParts.join(" · ");
+    const cls = item.status === "Interested" ? " interested" : "";
+    const meeting = item.meetingTime ? `<div class="shortlist-meta">Meeting: ${escapeHtml(item.meetingTime)}</div>` : "";
+
+    const products = item.productMatches || [];
+    const solutions = item.solutionMatches || [];
+    const industries = item.industryMatches || [];
+    const whyRows = [
+      products.length ? `<div class="shortlist-why-row"><b>Product Categories:</b> ${products.map(escapeHtml).join(" · ")}</div>` : "",
+      solutions.length ? `<div class="shortlist-why-row"><b>Solutions:</b> ${solutions.map(escapeHtml).join(" · ")}</div>` : "",
+      industries.length ? `<div class="shortlist-why-row"><b>Industry:</b> ${industries.map(escapeHtml).join(" · ")}</div>` : ""
+    ].filter(Boolean).join("");
+    const why = whyRows ? `<div class="shortlist-why"><div class="shortlist-why-title">Why This Match</div>${whyRows}</div>` : "";
+
+    return `
+      <div class="shortlist-item">
+        <div>
+          <div class="shortlist-name">${escapeHtml(item.name)}</div>
+          <div class="shortlist-meta">${meta}</div>
+          ${why}
+          ${meeting}
+          <span class="shortlist-status${cls}">${escapeHtml(item.status)}</span>
+        </div>
+        <button class="shortlist-remove" type="button" aria-label="Remove ${escapeHtml(item.name)}" onclick='removeFromShortlist(${JSON.stringify(item.id)})'>×</button>
+      </div>`;
+  }).join("");
+}
+
+function printShortlist(){
+  if(!shortlist.length){
+    alert("Your shortlist is empty.");
+    return;
+  }
+  window.print();
+}
+
+function canvasRoundRect(ctx, x, y, w, h, r){
+  const radius = Math.min(r, w/2, h/2);
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + w, y, x + w, y + h, radius);
+  ctx.arcTo(x + w, y + h, x, y + h, radius);
+  ctx.arcTo(x, y + h, x, y, radius);
+  ctx.arcTo(x, y, x + w, y, radius);
+  ctx.closePath();
+}
+
+function wrapCanvasText(ctx, text, maxWidth){
+  const words = String(text || "").split(/\s+/);
+  const lines = [];
+  let line = "";
+  words.forEach(word=>{
+    const test = line ? line + " " + word : word;
+    if(ctx.measureText(test).width > maxWidth && line){
+      lines.push(line);
+      line = word;
+    }else{
+      line = test;
+    }
+  });
+  if(line) lines.push(line);
+  return lines.length ? lines : [""];
+}
+
+async function downloadShortlistImage(){
+  if(!shortlist.length){
+    alert("Your shortlist is empty.");
+    return;
+  }
+
+  const scale = 2;
+  const width = 900;
+  const pad = 56;
+  const contentWidth = width - pad * 2;
+  const measure = document.createElement("canvas").getContext("2d");
+
+  function measureLines(text, font, maxWidth){
+    measure.font = font;
+    return wrapCanvasText(measure, text, maxWidth).length;
+  }
+
+  let height = 245;
+  shortlist.forEach(item=>{
+    height += 42 + measureLines(item.name, '700 22px Arial, sans-serif', contentWidth - 70) * 28;
+    height += 30; // booth/building
+    const rows = [
+      (item.productMatches || []).length ? `Product Categories: ${(item.productMatches || []).join(" · ")}` : "",
+      (item.solutionMatches || []).length ? `Solutions: ${(item.solutionMatches || []).join(" · ")}` : "",
+      (item.industryMatches || []).length ? `Industry: ${(item.industryMatches || []).join(" · ")}` : ""
+    ].filter(Boolean);
+    if(rows.length){
+      height += 28; // Why This Match heading
+      rows.forEach(row=> height += measureLines(row, '400 14px Arial, sans-serif', contentWidth) * 20 + 4);
+    }
+    if(item.meetingTime) height += 28;
+    height += 52; // badge + spacing
+  });
+  height += 95;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width * scale;
+  canvas.height = height * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(scale, scale);
+
+  ctx.fillStyle = "#f4f9fc";
+  ctx.fillRect(0, 0, width, height);
+  ctx.fillStyle = "#ffffff";
+  canvasRoundRect(ctx, 22, 22, width - 44, height - 44, 22);
+  ctx.fill();
+
+  let y = 72;
+  ctx.fillStyle = "#34705f";
+  ctx.font = '700 14px Arial, sans-serif';
+  ctx.fillText("JIMTOF 2026 · TAIWAN SMART MANUFACTURING", pad, y);
+
+  y += 42;
+  ctx.fillStyle = "#17364a";
+  ctx.font = '700 34px Arial, sans-serif';
+  ctx.fillText("Your Taiwan Supplier Shortlist", pad, y);
+
+  y += 32;
+  ctx.fillStyle = "#6f7f8a";
+  ctx.font = '400 16px Arial, sans-serif';
+  ctx.fillText("Saved suppliers and the reasons they matched your search.", pad, y);
+
+  y += 35;
+  ctx.strokeStyle = "#d9e4ea";
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(width-pad, y); ctx.stroke();
+
+  shortlist.forEach((item,index)=>{
+    y += 35;
+    ctx.fillStyle = "#17364a";
+    ctx.font = '700 22px Arial, sans-serif';
+    wrapCanvasText(ctx,item.name,contentWidth-70).forEach(line=>{
+      ctx.fillText(line,pad,y); y += 28;
+    });
+
+    const meta=[];
+    if(item.booth) meta.push(`${item.booth.includes(";") ? "Booths" : "Booth"} ${item.booth}`);
+    if(item.building) meta.push(item.building);
+    ctx.fillStyle="#6f7f8a";
+    ctx.font='400 15px Arial, sans-serif';
+    if(meta.length){ ctx.fillText(meta.join(" · "),pad,y+3); y+=28; }
+
+    const whyRows = [
+      (item.productMatches || []).length ? ["Product Categories", (item.productMatches || []).join(" · ")] : null,
+      (item.solutionMatches || []).length ? ["Solutions", (item.solutionMatches || []).join(" · ")] : null,
+      (item.industryMatches || []).length ? ["Industry", (item.industryMatches || []).join(" · ")] : null
+    ].filter(Boolean);
+
+    if(whyRows.length){
+      ctx.fillStyle="#087b78";
+      ctx.font='700 15px Arial, sans-serif';
+      ctx.fillText("Why This Match",pad,y+2); y+=24;
+
+      whyRows.forEach(([label,value])=>{
+        const text=`${label}: ${value}`;
+        ctx.fillStyle="#315d72";
+        ctx.font='400 14px Arial, sans-serif';
+        wrapCanvasText(ctx,text,contentWidth).forEach(line=>{
+          ctx.fillText(line,pad,y); y+=20;
+        });
+        y+=4;
+      });
+    }
+
+    if(item.meetingTime){
+      ctx.fillStyle="#315d72";
+      ctx.font='700 15px Arial, sans-serif';
+      ctx.fillText(`Meeting: ${item.meetingTime}`,pad,y+2); y+=28;
+    }
+
+    const badgeText=item.status || "Saved";
+    ctx.font='700 13px Arial, sans-serif';
+    const badgeW=ctx.measureText(badgeText).width+24;
+    ctx.fillStyle=item.status==="Interested" ? "#dff3f7" : "#eef5f8";
+    canvasRoundRect(ctx,pad,y,badgeW,28,14); ctx.fill();
+    ctx.fillStyle=item.status==="Interested" ? "#155b86" : "#315d72";
+    ctx.fillText(badgeText,pad+12,y+19); y+=48;
+
+    if(index<shortlist.length-1){
+      ctx.strokeStyle="#d9e4ea";
+      ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(width-pad,y); ctx.stroke();
+    }
+  });
+
+  y+=35;
+  ctx.fillStyle="#6f7f8a";
+  ctx.font='400 13px Arial, sans-serif';
+  ctx.fillText("Taiwan Supplier Matchmaking · JIMTOF 2026",pad,y);
+
+  const filename="JIMTOF2026_Taiwan_Supplier_Shortlist.png";
+  canvas.toBlob(async blob=>{
+    if(!blob){ alert("Could not create the image. Please try again."); return; }
+    const file=new File([blob],filename,{type:"image/png"});
+    const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if(isMobile && navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+      try{
+        await navigator.share({files:[file],title:"JIMTOF 2026 Taiwan Supplier Shortlist"});
+        return;
+      }catch(err){ if(err && err.name==="AbortError") return; }
+    }
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement("a");
+    link.href=url; link.download=filename; document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+  },"image/png");
+}
+
+async function loadBookedSlots(supplierId){
+  bookedMeetingSlots = new Set();
+  if(!GOOGLE_SHEET_API_URL) return;
+
+  const url = new URL(GOOGLE_SHEET_API_URL);
+  url.searchParams.set("action", "bookedSlots");
+  url.searchParams.set("supplierId", supplierId);
+  url.searchParams.set("_", Date.now());
+
+  try{
+    const response = await fetch(url.toString(), {cache:"no-store"});
+    const data = await response.json();
+    if(data && data.success && Array.isArray(data.bookedSlots)){
+      bookedMeetingSlots = new Set(data.bookedSlots);
+    }
+  }catch(err){
+    console.warn("Could not load booked meeting slots", err);
+  }
+}
+
+async function openModal(id){
+  const supplier = currentResults.get(id);
+  if(!supplier) return;
+
+  activeMeetingSupplierId = id;
+  selectedMeetingDate = "";
+  bookingInProgress = false;
+
+  document.getElementById("modalTitle").textContent=`Schedule · ${supplier.name}`;
+  document.getElementById("confirmMsg").textContent="";
+  document.getElementById("timeGrid").innerHTML="";
+  document.getElementById("timePrompt").textContent="Checking availability…";
+
+  document.querySelectorAll(".date-option").forEach(btn=>{
+    btn.classList.remove("selected");
+    btn.disabled = true;
+  });
+
+  document.getElementById("modal").style.display="flex";
+  await loadBookedSlots(id);
+
+  document.querySelectorAll(".date-option").forEach(btn=>{
+    btn.disabled = false;
+  });
+  document.getElementById("timePrompt").textContent="Select a date first.";
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+  activeMeetingSupplierId = "";
+  selectedMeetingDate = "";
+  bookedMeetingSlots = new Set();
+  bookingInProgress = false;
+}
+
+function selectMeetingDate(dateLabel, btn){
+  selectedMeetingDate = dateLabel;
+
+  document.querySelectorAll(".date-option").forEach(b=>{
+    b.classList.remove("selected");
+  });
+  btn.classList.add("selected");
+
+  const timeGrid = document.getElementById("timeGrid");
+  const timePrompt = document.getElementById("timePrompt");
+  timeGrid.innerHTML = "";
+  timePrompt.textContent = `Available times for ${dateLabel}`;
+
+  const slots = [];
+  const closingMinutes = selectedMeetingDate === "Oct 31" ? 16 * 60 : 17 * 60;
+  for(let minutes = 10 * 60; minutes <= closingMinutes; minutes += 30){
+    const hour = Math.floor(minutes / 60);
+    const minute = minutes % 60;
+    const label = `${String(hour).padStart(2,"0")}:${String(minute).padStart(2,"0")}`;
+    slots.push(label);
+  }
+
+  slots.forEach(label=>{
+    const fullMeetingTime = `${dateLabel} · ${label}`;
+    const isBooked = bookedMeetingSlots.has(fullMeetingTime);
+    const b = document.createElement("button");
+    b.className = `time${isBooked ? " booked" : ""}`;
+    b.textContent = isBooked ? `${label} · Booked` : label;
+    b.disabled = isBooked;
+    if(!isBooked){
+      b.onclick = () => confirmTime(label, b);
+    }
+    timeGrid.appendChild(b);
+  });
+}
+
+async function checkBookingStatus(supplierId, meetingTime){
+  const url = new URL(GOOGLE_SHEET_API_URL);
+  url.searchParams.set("action", "bookingStatus");
+  url.searchParams.set("supplierId", supplierId);
+  url.searchParams.set("meetingTime", meetingTime);
+  url.searchParams.set("sessionId", SESSION_ID);
+  url.searchParams.set("_", Date.now());
+
+  try{
+    const response = await fetch(url.toString(), {cache:"no-store"});
+    return await response.json();
+  }catch(err){
+    console.warn("Could not confirm booking status", err);
+    return null;
+  }
+}
+
+async function confirmTime(timeLabel, btn){
+  if(!selectedMeetingDate || bookingInProgress) return;
+
+  const supplier = currentResults.get(activeMeetingSupplierId);
+  if(!supplier) return;
+
+  const fullMeetingTime = `${selectedMeetingDate} · ${timeLabel}`;
+  if(bookedMeetingSlots.has(fullMeetingTime)){
+    btn.disabled = true;
+    btn.classList.add("booked");
+    btn.textContent = `${timeLabel} · Booked`;
+    return;
+  }
+
+  bookingInProgress = true;
+  document.querySelectorAll("#timeGrid .time").forEach(b=>b.disabled=true);
+  document.getElementById("confirmMsg").textContent = `Saving ${fullMeetingTime}…`;
+
+  sendMatchRecord(supplier, "Meeting Requested", fullMeetingTime);
+
+  let status = null;
+  for(let attempt=0; attempt<4; attempt++){
+    await new Promise(resolve=>setTimeout(resolve, 650 + attempt*250));
+    status = await checkBookingStatus(supplier.id, fullMeetingTime);
+    if(status && status.success && status.booked) break;
+  }
+
+  await loadBookedSlots(supplier.id);
+  bookingInProgress = false;
+
+  if(status && status.success && status.bookedByThisSession){
+    updateShortlistMeeting(supplier.id, fullMeetingTime);
+    document.getElementById("confirmMsg").textContent =
+      `✓ Meeting request saved for ${fullMeetingTime}.`;
+  }else if(status && status.success && status.booked){
+    document.getElementById("confirmMsg").textContent =
+      `Sorry, ${fullMeetingTime} was just booked by another buyer. Please choose another time.`;
+  }else{
+    document.getElementById("confirmMsg").textContent =
+      `Could not confirm the booking. Please try again.`;
+  }
+
+  const selectedDateButton = [...document.querySelectorAll(".date-option")]
+    .find(b=>b.textContent.trim()===selectedMeetingDate);
+  if(selectedDateButton) selectMeetingDate(selectedMeetingDate, selectedDateButton);
+}
+
+loadSuppliers();
+
+renderShortlist();
+</script>
+</body>
+</html>
+
+<style>
+.step-summary:empty{display:none}
+</style>
