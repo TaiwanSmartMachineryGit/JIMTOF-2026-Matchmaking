@@ -268,12 +268,12 @@ background:conic-gradient(var(--good) calc(var(--score)*1%),#d5eaf1 0);position:
       </div>
 
         </div>
-        <div id="tagCounter" role="status" aria-live="polite" style="margin-top:12px;font-size:13px;font-weight:700;color:var(--accent-dark)">0 / 5 tags selected · Select at least 1</div>
+        <div id="tagCounter" role="status" aria-live="polite" style="margin-top:12px;font-size:13px;font-weight:700;color:var(--accent-dark)">0 / 8 tags selected · Select at least 1</div>
         <div class="find-action">
           <button class="primary" onclick="rerank()">Find My Matches</button>
         </div>
       </div>
-      <div class="note">Select <b>at least 1 and at most 5 tags in total</b> across all three categories. Matching weights: Product Categories 50%, Smart Solutions 30%, Industries 20%. Unselected categories are excluded and remaining weights are normalized. Only the six highest-ranked matching suppliers are displayed. Ties are broken by Product score, then Smart Solutions score.</div>
+      <div class="note">Select <b>at least 1 and at most 8 tags in total</b> across all three categories. Matching weights: Product Categories 50%, Smart Solutions 30%, Industries 20%. Unselected categories are excluded and remaining weights are normalized. Only the six highest-ranked matching suppliers are displayed. Ties are broken by Product score, then Smart Solutions score.</div>
     </aside>
 
     <main class="card results-card">
@@ -543,7 +543,7 @@ function rerank(){
   const selectedIndustries = selectedFrom("industries");
   const selectedSolutions = selectedFrom("solutions");
 
-  if(selectedNeeds.length+selectedIndustries.length+selectedSolutions.length>5){alert("Please select no more than 5 tags.");return;}
+  if(selectedNeeds.length+selectedIndustries.length+selectedSolutions.length>8){alert("Please select no more than 8 tags.");return;}
   if(!selectedNeeds.length && !selectedIndustries.length && !selectedSolutions.length){
     const counter=document.getElementById("tagCounter");
     counter.textContent="Please select at least one tag before submitting.";
@@ -612,7 +612,7 @@ async function loadSuppliers(){
   showInitialState();
 }
 
-const TAG_LIMIT=5;
+const TAG_LIMIT=8;
 function updateTagCounter(){
   const count=document.querySelectorAll("#industries .tag.active, #solutions .tag.active, #needs .tag.active").length;
   const counter=document.getElementById("tagCounter");
@@ -622,7 +622,7 @@ document.querySelectorAll(".tag").forEach(t=>{
   t.onclick=()=>{
     const isCriterion=!!t.closest("#industries,#solutions,#needs");
     if(isCriterion&&!t.classList.contains("active")&&document.querySelectorAll("#industries .tag.active, #solutions .tag.active, #needs .tag.active").length>=TAG_LIMIT){
-      alert("You can select up to 5 tags in total. Deselect a tag first.");return;
+      alert("You can select up to 8 tags in total. Deselect a tag first.");return;
     }
     t.classList.toggle("active");updateTagCounter();
     const counter=document.getElementById("tagCounter");
